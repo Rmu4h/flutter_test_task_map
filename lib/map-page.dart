@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +16,10 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final Completer<GoogleMapController> _controller = Completer();
 
+  static const LatLng sourceLocation = LatLng(37.33500926, -122.03272188);
+  static const LatLng destination = LatLng(37.33429383, -122.06600055);
 
 
   @override
