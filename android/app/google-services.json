@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "485154178475",
+    "project_id": "flutter-tesk-task-map",
+    "storage_bucket": "flutter-tesk-task-map.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485154178475:android:5606267d9aaa52ea7c3eee",
+        "android_client_info": {
+          "package_name": "com.example.flutter_test_task_map"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485154178475-1ubtundb2dqgrermthc1hdseme8vbgju.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_test_task_map",
+            "certificate_hash": "e7560cd7a166487718a8ae31d61ae2df7a28c79a"
+          }
+        },
+        {
+          "client_id": "485154178475-jnskhfos8rvv298pg775a369in4itsj7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5iO7twrmNfA-5Wy5t8QOqh9Bcsib920s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "485154178475-da6nu0lunqlv98b7adoe8pkkodqdeohp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
