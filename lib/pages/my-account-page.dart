@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'global-variables.dart';
+import '../logic/global-variables.dart';
 
 
 // class MyApp extends StatelessWidget {

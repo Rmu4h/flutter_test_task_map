@@ -2,12 +2,13 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../global-variables.dart';
+import '../logic/global-variables.dart';
 import '../logic/processing.dart';
-import '../map-page.dart';
-import '../my-account.dart';
+import '../pages/map-page.dart';
+import '../pages/my-account-page.dart';
 
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
@@ -51,7 +52,7 @@ class _LoginState extends State<Login> {
                     height: 250,
                   ),
                   const Text(
-                    'Best map ever, login to see it',
+                    'Best map ever. Login to see it',
                     style: TextStyle(
                         fontStyle: FontStyle.italic,
                         fontSize: 50,
@@ -90,15 +91,15 @@ class _LoginState extends State<Login> {
 
                       AuthService().signInWithGoogle().then((value) {
                         if(userName.isNotEmpty){
-                            // Navigator.pop(context);
                             Navigator.popAndPushNamed(context, '/main', arguments: value);
                         }
 
                       });
+
+                      hideStatusBar();
                     },
 
                     style: ElevatedButton.styleFrom(
-                      // shape: const StadiumBorder(),
                       backgroundColor: Colors.transparent,
                       disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
                       shadowColor: Colors.transparent,
@@ -110,7 +111,6 @@ class _LoginState extends State<Login> {
                         Image.asset(
                           'assets/images/google-t.png',
                           fit: BoxFit.cover,
-                          // width: 50,
                           height: 40,
                         ),
                         const SizedBox(
@@ -132,4 +132,6 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+
+  Future hideStatusBar() => SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 }

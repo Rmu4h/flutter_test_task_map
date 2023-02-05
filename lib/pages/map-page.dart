@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 // import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:flutter_test_task_map/profile.dart';
+import 'package:flutter_test_task_map/pages/profile-page.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 // import 'package:location/location.dart';
@@ -18,7 +18,7 @@ import 'package:location/location.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 
-import 'global-variables.dart';
+import '../logic/global-variables.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -104,17 +104,7 @@ class _MapPageState extends State<MapPage> {
                       ),
                     }
                 ),
-                Positioned(
-                  top: 40,
-                  right: 20,
-                  child: IconButton(
-                          icon: Image.asset('assets/images/icon-menu3.png'),
-                          iconSize: 30,
-                          onPressed: () {
-                            return _scaffoldKey.currentState?.openEndDrawer();
-                          },
-                        ),
-                ),
+
                 Positioned(  //search input bar
                     top:10,
                     child: InkWell(
@@ -151,25 +141,39 @@ class _MapPageState extends State<MapPage> {
 
 
                             //move map camera to selected place with animation
-                            _googleMapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
+                            _googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
                           }
                         },
                         child:Padding(
-                          padding: EdgeInsets.all(15),
+                          padding: const EdgeInsets.fromLTRB(50,40,50,15),
                           child: Card(
-                            child: Container(
-                                padding: EdgeInsets.all(0),
-                                width: MediaQuery.of(context).size.width - 40,
-                                child: ListTile(
-                                  title:Text(location, style: TextStyle(fontSize: 18),),
-                                  trailing: Icon(Icons.search),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(60),
+                            ),
+                            child: SizedBox(
+                                width: MediaQuery.of(context).size.width - 100,
+
+                              child: ListTile(
+                                  title:Text(location, style: const TextStyle(fontSize: 18),),
+                                  trailing: const Icon(Icons.search),
                                   dense: true,
                                 )
                             ),
                           ),
                         )
                     )
-                )
+                ),
+                Positioned(
+                  top: 20,
+                  right: 10,
+                  child: IconButton(
+                    icon: Image.asset('assets/images/icon-menu3.png'),
+                    iconSize: 30,
+                    onPressed: () {
+                      return _scaffoldKey.currentState?.openEndDrawer();
+                    },
+                  ),
+                ),
               ],
             )
         ),
