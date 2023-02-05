@@ -83,7 +83,7 @@ class _AccountPageState extends State<AccountPage> {
                         itemBuilder: (BuildContext context, int index) {
                           return Container(
                             // height: 30,
-                              padding: const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.fromLTRB(0,10.0,0,10.0),
                               child: Wrap(
                                 crossAxisAlignment: WrapCrossAlignment.center,
                                 children: [
@@ -110,7 +110,7 @@ class _AccountPageState extends State<AccountPage> {
                       ),
                       Row(
                         children: [
-                          Icon(Icons.circle, color:
+                          Icon(Icons.circle, size: 30, color:
                           _colorCharacter == DefaultColor.blueColor
                               ? Colors.blue
                               : _colorCharacter == DefaultColor.greenColor
@@ -126,10 +126,9 @@ class _AccountPageState extends State<AccountPage> {
                                 context: context,
                                 builder: (BuildContext context) => AlertDialog(
                                   backgroundColor: const Color(0xFF0F0F0F),
-                                  title: const Text('Choose a marker color', style: TextStyle(color: Colors.white)),
+                                  title: const Text('Choose a marker color', style: TextStyle(color: Colors.white, fontSize: 18)),
                                   content: StatefulBuilder(
                                     builder: (BuildContext context, StateSetter setState) {
-
                                       return Column(
                                         children: <Widget>[
                                           ListTile(
@@ -138,8 +137,6 @@ class _AccountPageState extends State<AccountPage> {
                                               value: DefaultColor.blueColor,
                                               groupValue: _colorCharacter,
                                               onChanged: (DefaultColor? value) {
-                                                print(' title text');
-                                                // _changeFrequencyText(value);
                                                 setState(() {
                                                   _colorCharacter = value;
                                                 });
@@ -156,7 +153,6 @@ class _AccountPageState extends State<AccountPage> {
                                                 // _changeFrequencyText(value);
 
                                                 setState(() {
-                                                  print('work setState');
                                                   _colorCharacter = value;
                                                 });
                                               },
@@ -231,15 +227,12 @@ class _AccountPageState extends State<AccountPage> {
                                               : _colorCharacter == DefaultColor.redColor
                                               ? BitmapDescriptor.hueRed
                                               : BitmapDescriptor.hueYellow;
-                                          print('this OK _colorCharacter ${_colorCharacter}');
-                                          print('this OK markerColor ${markerColor}');
                                         });
                                       },
                                       child: const Text('OK'),
                                     ),
                                   ],
                                 )
-
                             ),
                             child: Text(
                               _colorCharacter == DefaultColor.blueColor

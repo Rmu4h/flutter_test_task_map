@@ -1,8 +1,6 @@
 import 'dart:async';
-// import 'dart:html';
 import 'dart:io';
 
-import 'package:custom_marker/marker_icon.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +9,12 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_test_task_map/profile.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:path_provider/path_provider.dart' as pathProvider;
-import 'package:path/path.dart' as path;
-import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart' as path_provider;
-import 'dart:ui' as ui;
+// import 'package:location/location.dart';
+// import 'package:path_provider/path_provider.dart' as pathProvider;
+// import 'package:path/path.dart' as path;
+// import 'package:http/http.dart' as http;
+// import 'package:path_provider/path_provider.dart' as path_provider;
+// import 'dart:ui' as ui;
 
 import 'global-variables.dart';
 
@@ -28,12 +27,6 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  // final Completer<GoogleMapController> _controller = Completer();
-  //
-  // static const LatLng sourceLocation = LatLng(37.33500926, -122.03272188);
-  // static const LatLng destination = LatLng(37.33429383, -122.06600055);
-
   static const _initialCameraPosition = CameraPosition(
       target: showLocation,
       zoom: 11.5
@@ -80,27 +73,6 @@ class _MapPageState extends State<MapPage> {
     super.dispose();
   }
 
-  void getPolyPoints() async {
-    PolylinePoints polylinePoints = PolylinePoints();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      google_api_key, // Your Google Map Key
-      PointLatLng(showLocation.latitude, showLocation.longitude),
-      PointLatLng(destination.latitude, destination.longitude),
-    );
-    if (result.points.isNotEmpty ) {
-      result.points.forEach(
-            (PointLatLng point) {
-              return polylineCoordinates.add(
-                LatLng(point.latitude, point.longitude),
-              );
-            }
-      );
-      setState(() {});
-    }
-  }
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,17 +85,8 @@ class _MapPageState extends State<MapPage> {
                 GoogleMap(
                     zoomGesturesEnabled: true,
                     initialCameraPosition: _initialCameraPosition,
-                    // onMapCreated: (controller) => _googleMapController = controller,
-                    // markers: {
-                    //   originExist ? _origin : Marker(markerId: const MarkerId('origin'),),
-                    //   destinationExist ? _destination : Marker(markerId: const MarkerId('destination'),),
-                    //
-                    //   // if (_destination != null) _destination,
-                    // },
-                    markers: getmarkers().toSet(),
-                    // onLongPress: _addMarker,
+                    markers: getMarkers().toSet(),
                     mapType: MapType.normal,
-                    //map type
                     onMapCreated: (
                         controller) { //method called when map is created
                       setState(() {
@@ -154,7 +117,6 @@ class _MapPageState extends State<MapPage> {
                 ),
               ],
             )
-
         ),
       ),
       endDrawer: Drawer(
@@ -256,10 +218,11 @@ class _MapPageState extends State<MapPage> {
             ),
         child: const Icon(Icons.center_focus_strong),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
-  List<Marker> getmarkers()  {
+  List<Marker> getMarkers()  {
     //markers to place on map
 
     setState(() {
@@ -299,7 +262,6 @@ class _MapPageState extends State<MapPage> {
 
       markers.add(Marker( //add second marker
         draggable: true,
-
         markerId: MarkerId(destination.toString()),
         position: destination,
         //position of marker
@@ -307,36 +269,49 @@ class _MapPageState extends State<MapPage> {
           title: 'My direction',
           snippet: 'My Custom Subtitle',
         ),
-        // icon: BitmapDescriptor.defaultMarker, //Icon for Marker
         icon: BitmapDescriptor.defaultMarkerWithHue(markerColor),
-
       ));
 
       //add more markers here
 
       // add myTappedDirectionMarker
-      print('myTappedDirectionMarker.length ${myTappedDirectionMarker.length}');
 
       for (var element in myTappedDirectionMarker) {
         markers.add(element);
-        print('elment count ${element}');
       }
     });
 
     return markers;
   }
 
+  void getPolyPoints() async {
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      google_api_key, // Your Google Map Key
+      PointLatLng(showLocation.latitude, showLocation.longitude),
+      PointLatLng(destination.latitude, destination.longitude),
+    );
+    if (result.points.isNotEmpty ) {
+      result.points.forEach(
+              (PointLatLng point) {
+            return polylineCoordinates.add(
+              LatLng(point.latitude, point.longitude),
+            );
+          }
+      );
+      setState(() {});
+    }
+  }
+
   _handleTap(tappedPoint) {
     destination = tappedPoint;
-    print(tappedPoint);
     lastTappedEl = Marker(
       markerId: MarkerId(destination.toString()),
       position: destination,
-      draggable: true,
+      // draggable: true,
       icon: BitmapDescriptor.defaultMarkerWithHue(markerColor),
-      onDragEnd: (dragEndPosition) {
-        print(dragEndPosition);
-      },
+      // onDragEnd: (dragEndPosition) {
+      // },
     );
 
     setState(() {
