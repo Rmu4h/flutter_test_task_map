@@ -31,8 +31,8 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-android {
-    defaultConfig {
-        minSdkVersion 20
-    }
-}
+//android {
+//    defaultConfig {
+//        minSdkVersion 20
+//    }
+//}

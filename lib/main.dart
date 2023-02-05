@@ -79,6 +79,8 @@ class MyApp extends StatelessWidget {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/': (context) => const AuthPage(), //SearchWidget MainPage
+        // '/': (context) => const MapPage(), //SearchWidget MainPage
+
         '/main': (context) => WillPopScope(
             onWillPop: () => Future.value(false),
             child: const MapPage()),
