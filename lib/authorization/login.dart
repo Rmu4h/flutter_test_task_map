@@ -1,17 +1,13 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import '../logic/global-variables.dart';
 import '../logic/processing.dart';
-import '../pages/map-page.dart';
-import '../pages/my-account-page.dart';
+
 
 class Login extends StatefulWidget {
-  Login({Key? key}) : super(key: key);
+  const Login({Key? key}) : super(key: key);
 
   @override
   State<Login> createState() => _LoginState();
@@ -22,8 +18,6 @@ class _LoginState extends State<Login> {
 
 
   void signUserIn() {}
-
-  // print(_googleSignIn);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

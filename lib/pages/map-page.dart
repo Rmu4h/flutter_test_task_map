@@ -8,14 +8,13 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_test_task_map/pages/profile-page.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
-// import 'package:location/location.dart';
 // import 'package:path_provider/path_provider.dart' as pathProvider;
 // import 'package:path/path.dart' as path;
 // import 'package:http/http.dart' as http;
 // import 'package:path_provider/path_provider.dart' as path_provider;
 // import 'dart:ui' as ui;
-import 'package:google_maps_webservice/places.dart';
+import 'package:location/location.dart';
+// import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 
 import '../logic/global-variables.dart';
@@ -29,10 +28,7 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  static const _initialCameraPosition = CameraPosition(
-      target: showLocation,
-      zoom: 11.5
-  );
+  CameraPosition? _initialCameraPosition;
 
   late GoogleMapController _googleMapController;
   final Completer<GoogleMapController> _controller = Completer();
@@ -44,8 +40,7 @@ class _MapPageState extends State<MapPage> {
   List<Marker> markers = []; //markers for google map
 
   List<Marker> myTappedDirectionMarker = [];
-  static const LatLng showLocation = LatLng(
-      27.7089427, 85.3086209); //location to show in map
+  LatLng? showLocation; //location to show in map
   late Marker lastTappedEl;
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
   LocationData? currentLocation;
@@ -61,7 +56,7 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     // setCustomMarkerIcon();
     // _download();
-    // getCurrentLocation();
+    getCurrentLocation();
     getPolyPoints();
 
     super.initState();
@@ -84,14 +79,19 @@ class _MapPageState extends State<MapPage> {
               children: [
                 GoogleMap(
                     zoomGesturesEnabled: true,
-                    initialCameraPosition: _initialCameraPosition,
+                    initialCameraPosition: _initialCameraPosition ?? CameraPosition(
+                        target: showLocation ?? LatLng(
+                            27.7089427, 85.3086209),
+                        zoom: 11.5
+                    ),
                     markers: getMarkers().toSet(),
                     mapType: MapType.normal,
                     onMapCreated: (
                         controller) { //method called when map is created
                       setState(() {
-                        _googleMapController = controller;
+                        // _googleMapController = controller;
                         _controller.complete(controller);
+
                       });
                     },
                     onTap: _handleTap,
@@ -105,64 +105,64 @@ class _MapPageState extends State<MapPage> {
                     }
                 ),
 
-                Positioned(  //search input bar
-                    top:10,
-                    child: InkWell(
-                        onTap: () async {
-                          var place = await PlacesAutocomplete.show(
-                              context: context,
-                              apiKey: googleApiKey,
-                              mode: Mode.overlay,
-                              types: [],
-                              strictbounds: false,
-                              components: [Component(Component.country, 'np')],
-                              //google_map_webservice package
-                              onError: (err){
-                                print(err);
-                              }
-                          );
-
-                          if(place != null){
-                            setState(() {
-                              location = place.description.toString();
-                            });
-
-                            //form google_maps_webservice package
-                            final plist = GoogleMapsPlaces(apiKey:googleApiKey,
-                              apiHeaders: await GoogleApiHeaders().getHeaders(),
-                              //from google_api_headers package
-                            );
-                            String placeid = place.placeId ?? "0";
-                            final detail = await plist.getDetailsByPlaceId(placeid);
-                            final geometry = detail.result.geometry!;
-                            final lat = geometry.location.lat;
-                            final lang = geometry.location.lng;
-                            var newlatlang = LatLng(lat, lang);
-
-
-                            //move map camera to selected place with animation
-                            _googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
-                          }
-                        },
-                        child:Padding(
-                          padding: const EdgeInsets.fromLTRB(50,40,50,15),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(60),
-                            ),
-                            child: SizedBox(
-                                width: MediaQuery.of(context).size.width - 100,
-
-                              child: ListTile(
-                                  title:Text(location, style: const TextStyle(fontSize: 18),),
-                                  trailing: const Icon(Icons.search),
-                                  dense: true,
-                                )
-                            ),
-                          ),
-                        )
-                    )
-                ),
+                // Positioned(  //search input bar
+                //     top:10,
+                //     child: InkWell(
+                //         onTap: () async {
+                //           var place = await PlacesAutocomplete.show(
+                //               context: context,
+                //               apiKey: googleApiKey,
+                //               mode: Mode.overlay,
+                //               types: [],
+                //               strictbounds: false,
+                //               components: [Component(Component.country, 'np')],
+                //               //google_map_webservice package
+                //               onError: (err){
+                //                 print(err);
+                //               }
+                //           );
+                //
+                //           if(place != null){
+                //             setState(() {
+                //               location = place.description.toString();
+                //             });
+                //
+                //             //form google_maps_webservice package
+                //             final plist = GoogleMapsPlaces(apiKey:googleApiKey,
+                //               apiHeaders: await GoogleApiHeaders().getHeaders(),
+                //               //from google_api_headers package
+                //             );
+                //             String placeid = place.placeId ?? "0";
+                //             final detail = await plist.getDetailsByPlaceId(placeid);
+                //             final geometry = detail.result.geometry!;
+                //             final lat = geometry.location.lat;
+                //             final lang = geometry.location.lng;
+                //             var newlatlang = LatLng(lat, lang);
+                //
+                //
+                //             //move map camera to selected place with animation
+                //             _googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
+                //           }
+                //         },
+                //         child:Padding(
+                //           padding: const EdgeInsets.fromLTRB(50,40,50,15),
+                //           child: Card(
+                //             shape: RoundedRectangleBorder(
+                //               borderRadius: BorderRadius.circular(60),
+                //             ),
+                //             child: SizedBox(
+                //                 width: MediaQuery.of(context).size.width - 100,
+                //
+                //               child: ListTile(
+                //                   title:Text(location, style: const TextStyle(fontSize: 18),),
+                //                   trailing: const Icon(Icons.search),
+                //                   dense: true,
+                //                 )
+                //             ),
+                //           ),
+                //         )
+                //     )
+                // ),
                 Positioned(
                   top: 20,
                   right: 10,
@@ -273,7 +273,11 @@ class _MapPageState extends State<MapPage> {
         foregroundColor: Colors.black,
         onPressed: () =>
             _googleMapController.animateCamera(
-              CameraUpdate.newCameraPosition(_initialCameraPosition),
+              CameraUpdate.newCameraPosition(_initialCameraPosition ?? CameraPosition(
+                  target: showLocation ?? const LatLng(
+                      27.7089427, 85.3086209),
+                  zoom: 11.5
+              )),
             ),
         child: const Icon(Icons.center_focus_strong),
       ),
@@ -293,7 +297,8 @@ class _MapPageState extends State<MapPage> {
             },
             icon: myCustomAvatarIcon,
             markerId:  MarkerId(showLocation.toString()),
-          position: showLocation,
+          position: showLocation ?? LatLng(
+              27.7089427, 85.3086209),
         infoWindow: InfoWindow( //popup info
           title: userName,
           snippet: profileEmail,
@@ -329,7 +334,7 @@ class _MapPageState extends State<MapPage> {
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       googleApiKey, // Your Google Map Key
-      PointLatLng(showLocation.latitude, showLocation.longitude),
+      PointLatLng(showLocation?.latitude ?? 27.7089427, showLocation?.longitude ?? 85.3086209),
       PointLatLng(destination.latitude, destination.longitude),
     );
     if (result.points.isNotEmpty ) {
@@ -380,6 +385,43 @@ class _MapPageState extends State<MapPage> {
     getPolyPoints();
     polylineCoordinates = [];
     markers = [];
+  }
+
+  void getCurrentLocation() async {
+    Location location = Location();
+
+    location.getLocation().then(
+          (location) {
+        currentLocation = location;
+      },
+    );
+    GoogleMapController googleMapController = await _controller.future;
+    location.onLocationChanged.listen(
+          (newLoc) {
+        currentLocation = newLoc;
+        googleMapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              zoom: 17.5,
+              target: LatLng(
+                newLoc.latitude!,
+                newLoc.longitude!,
+              ),
+            ),
+          ),
+        );
+
+        showLocation = LatLng(
+            currentLocation!.latitude!, currentLocation!.longitude!);
+
+        _initialCameraPosition = CameraPosition(
+            target: showLocation ?? LatLng(
+                27.7089427, 85.3086209),
+            zoom: 11.5
+            );
+        setState(() {});
+      },
+    );
   }
 
 }
