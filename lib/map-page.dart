@@ -49,7 +49,7 @@ class _MapPageState extends State<MapPage> {
   late Marker _destination;
 
   // final Set<Marker> markers = Set(); //markers for google map
-  final List<Marker> markers = []; //markers for google map
+  List<Marker> markers = []; //markers for google map
 
   List<Marker> myTappedDirectionMarker = [];
   static const LatLng showLocation = LatLng(
@@ -108,54 +108,50 @@ class _MapPageState extends State<MapPage> {
 
       body: Center(
         child: Center(
-            child: Column(
+            child: Stack(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Image.asset('assets/images/icon-menu3.png'),
-                      iconSize: 30,
-                      onPressed: () {
-                        return _scaffoldKey.currentState?.openEndDrawer();
-                      },
-                    ),
-                  ],
+                GoogleMap(
+                    zoomGesturesEnabled: true,
+                    initialCameraPosition: _initialCameraPosition,
+                    // onMapCreated: (controller) => _googleMapController = controller,
+                    // markers: {
+                    //   originExist ? _origin : Marker(markerId: const MarkerId('origin'),),
+                    //   destinationExist ? _destination : Marker(markerId: const MarkerId('destination'),),
+                    //
+                    //   // if (_destination != null) _destination,
+                    // },
+                    markers: getmarkers().toSet(),
+                    // onLongPress: _addMarker,
+                    mapType: MapType.normal,
+                    //map type
+                    onMapCreated: (
+                        controller) { //method called when map is created
+                      setState(() {
+                        _googleMapController = controller;
+                        _controller.complete(controller);
+                      });
+                    },
+                    onTap: _handleTap,
+                    polylines: {
+                      Polyline(
+                        polylineId: const PolylineId("route"),
+                        points: polylineCoordinates,
+                        color: const Color(0xFF7B61FF),
+                        width: 6,
+                      ),
+                    }
                 ),
-                Expanded(
-                    child: GoogleMap(
-
-                      zoomGesturesEnabled: true,
-                      initialCameraPosition: _initialCameraPosition,
-                      // onMapCreated: (controller) => _googleMapController = controller,
-                      // markers: {
-                      //   originExist ? _origin : Marker(markerId: const MarkerId('origin'),),
-                      //   destinationExist ? _destination : Marker(markerId: const MarkerId('destination'),),
-                      //
-                      //   // if (_destination != null) _destination,
-                      // },
-                      markers: getmarkers().toSet(),
-                      // onLongPress: _addMarker,
-                      mapType: MapType.normal,
-                      //map type
-                      onMapCreated: (
-                          controller) { //method called when map is created
-                        setState(() {
-                          _googleMapController = controller;
-                          _controller.complete(controller);
-                        });
-                      },
-                      onTap: _handleTap,
-                        polylines: {
-                          Polyline(
-                            polylineId: const PolylineId("route"),
-                            points: polylineCoordinates,
-                            color: const Color(0xFF7B61FF),
-                            width: 6,
-                          ),
-                        }
-                    )
-                )
+                Positioned(
+                  top: 40,
+                  right: 20,
+                  child: IconButton(
+                          icon: Image.asset('assets/images/icon-menu3.png'),
+                          iconSize: 30,
+                          onPressed: () {
+                            return _scaffoldKey.currentState?.openEndDrawer();
+                          },
+                        ),
+                ),
               ],
             )
 
@@ -369,6 +365,7 @@ class _MapPageState extends State<MapPage> {
     // markers.removeLast();
     getPolyPoints();
     polylineCoordinates = [];
+    markers = [];
     print('this is length Markers on click - ${markers.length}');
     // setState(() {});
   }

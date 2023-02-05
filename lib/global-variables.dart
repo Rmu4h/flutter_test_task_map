@@ -8,6 +8,8 @@ var myCustomAvatarIcon = BitmapDescriptor.defaultMarkerWithHue(markerColor);
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
 const String google_api_key = 'AIzaSyBvAr4Vog5K9vXIApXVjWAiXLJ8I1dclNI';
-var markerColor = BitmapDescriptor.hueGreen;
+// var markerColor = BitmapDescriptor.hueGreen;
+var markerColor = BitmapDescriptor.hueYellow;
+
 
 
