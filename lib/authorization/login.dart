@@ -79,60 +79,14 @@ class _LoginState extends State<Login> {
                 ),
                 child: ElevatedButton(
                     onPressed: () {
-                      // showDialog(
-                      //     context: context,
-                      //     builder: (context) {
-                      //       return const Center(
-                      //         child: CircularProgressIndicator(),
-                      //       );
-                      //     }
-                      // );
-
-                      // googleSignIn.signIn().then((value) {
-                      //   userName = value!.displayName!;
-                      //   profilePicture = value!.photoUrl!;
-                      //   print(userName);
-                      //   if(userName.isNotEmpty){
-                      //     Navigator.pop(context);
-                      //     Navigator.popAndPushNamed(context, '/main', arguments: value);
-                      //     // setState(() {});
-                      //
-                      //     // Navigator.push(
-                      //     //     context,
-                      //     //     MaterialPageRoute(
-                      //     //         builder: (context) => MapPage()));
-                      //   }
-                      // }).onError(
-                      //       (error, stackTrace) {
-                      //     showDialog(
-                      //       context: context,
-                      //       builder: (_) => AlertDialog(
-                      //         title: const Text('Account not find'),
-                      //         content: Text(error.toString()),
-                      //         actions: <Widget>[
-                      //           Center(
-                      //             child: SizedBox(
-                      //               height: 40,
-                      //               width: 90,
-                      //               child: FloatingActionButton(
-                      //                 onPressed: () {
-                      //                   Navigator.of(context).pop();
-                      //                 },
-                      //                 backgroundColor:
-                      //                 const Color(0xFF613CEA),
-                      //                 shape: RoundedRectangleBorder(
-                      //                   borderRadius:
-                      //                   BorderRadius.circular(5),
-                      //                 ),
-                      //                 child: const Text('Close'),
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         ],
-                      //       ),
-                      //     );
-                      //   },
-                      // );
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                      );
 
                       AuthService().signInWithGoogle().then((value) {
                         if(userName.isNotEmpty){
@@ -141,12 +95,6 @@ class _LoginState extends State<Login> {
                         }
 
                       });
-                      // if(userName.isNotEmpty){
-                      //   Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //           builder: (context) => MapPage()));
-                      // }
                     },
 
                     style: ElevatedButton.styleFrom(

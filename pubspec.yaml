@@ -47,6 +47,7 @@ dependencies:
   path: ^1.8.1
   path_provider: ^2.0.9
   custom_marker: ^1.0.0
+  flutter_google_places: ^0.3.0
 
 dev_dependencies:
   flutter_test:

@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+// import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_test_task_map/profile.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,6 +15,8 @@ import 'package:location/location.dart';
 // import 'package:http/http.dart' as http;
 // import 'package:path_provider/path_provider.dart' as path_provider;
 // import 'dart:ui' as ui;
+import 'package:google_maps_webservice/places.dart';
+import 'package:google_api_headers/google_api_headers.dart';
 
 import 'global-variables.dart';
 
@@ -38,9 +40,6 @@ class _MapPageState extends State<MapPage> {
   bool originExist = false;
   bool destinationExist = false;
 
-  late Marker _origin;
-  late Marker _destination;
-
   // final Set<Marker> markers = Set(); //markers for google map
   List<Marker> markers = []; //markers for google map
 
@@ -49,13 +48,14 @@ class _MapPageState extends State<MapPage> {
       27.7089427, 85.3086209); //location to show in map
   late Marker lastTappedEl;
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
-  final String _url = profilePicture;
-  File? _displayImage;
   LocationData? currentLocation;
 
   List<LatLng> polylineCoordinates = [];
   static const LatLng sourceLocation = LatLng(37.33500926, -122.03272188);
    LatLng destination = const LatLng(27.8089437, 85.3086219);
+
+  String location = "Search Location";
+
 
   @override
   void initState() {
@@ -115,6 +115,61 @@ class _MapPageState extends State<MapPage> {
                           },
                         ),
                 ),
+                Positioned(  //search input bar
+                    top:10,
+                    child: InkWell(
+                        onTap: () async {
+                          var place = await PlacesAutocomplete.show(
+                              context: context,
+                              apiKey: googleApiKey,
+                              mode: Mode.overlay,
+                              types: [],
+                              strictbounds: false,
+                              components: [Component(Component.country, 'np')],
+                              //google_map_webservice package
+                              onError: (err){
+                                print(err);
+                              }
+                          );
+
+                          if(place != null){
+                            setState(() {
+                              location = place.description.toString();
+                            });
+
+                            //form google_maps_webservice package
+                            final plist = GoogleMapsPlaces(apiKey:googleApiKey,
+                              apiHeaders: await GoogleApiHeaders().getHeaders(),
+                              //from google_api_headers package
+                            );
+                            String placeid = place.placeId ?? "0";
+                            final detail = await plist.getDetailsByPlaceId(placeid);
+                            final geometry = detail.result.geometry!;
+                            final lat = geometry.location.lat;
+                            final lang = geometry.location.lng;
+                            var newlatlang = LatLng(lat, lang);
+
+
+                            //move map camera to selected place with animation
+                            _googleMapController?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: newlatlang, zoom: 17)));
+                          }
+                        },
+                        child:Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Card(
+                            child: Container(
+                                padding: EdgeInsets.all(0),
+                                width: MediaQuery.of(context).size.width - 40,
+                                child: ListTile(
+                                  title:Text(location, style: TextStyle(fontSize: 18),),
+                                  trailing: Icon(Icons.search),
+                                  dense: true,
+                                )
+                            ),
+                          ),
+                        )
+                    )
+                )
               ],
             )
         ),
@@ -227,24 +282,6 @@ class _MapPageState extends State<MapPage> {
 
     setState(() {
       markers.add(
-      //     Marker(
-      //   //add first marker
-      //   draggable: true,
-      //   onDragEnd: (dragEndPosition) {
-      //     print(dragEndPosition);
-      //   },
-      //   markerId: MarkerId(showLocation.toString()),
-      //   position: showLocation,
-      //   //position of marker
-      //   infoWindow: InfoWindow( //popup info
-      //     title: userName,
-      //     snippet: 'My location',
-      //   ),
-      //   // icon: BitmapDescriptor.defaultMarker, //Icon for Marker
-      //   icon: BitmapDescriptor.fromBytes(bytes) ,
-      //     // icon:
-      // )
-
         Marker(
             draggable: true,
             onDragEnd: (dragEndPosition) {
@@ -287,7 +324,7 @@ class _MapPageState extends State<MapPage> {
   void getPolyPoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      google_api_key, // Your Google Map Key
+      googleApiKey, // Your Google Map Key
       PointLatLng(showLocation.latitude, showLocation.longitude),
       PointLatLng(destination.latitude, destination.longitude),
     );
@@ -336,82 +373,10 @@ class _MapPageState extends State<MapPage> {
       //     )
       // );
     });
-    // myTappedDirectionMarker = [];
-    // markers.removeLast();
     getPolyPoints();
     polylineCoordinates = [];
     markers = [];
-    print('this is length Markers on click - ${markers.length}');
-    // setState(() {});
   }
-
-  // void getCurrentLocation() async {
-  //   Location location = Location();
-  //   location.getLocation().then(
-  //         (location) {
-  //       currentLocation = location;
-  //     },
-  //   );
-  //   GoogleMapController googleMapController = await _controller.future;
-  //   location.onLocationChanged.listen(
-  //         (newLoc) {
-  //       currentLocation = newLoc;
-  //       googleMapController.animateCamera(
-  //         CameraUpdate.newCameraPosition(
-  //           CameraPosition(
-  //             zoom: 13.5,
-  //             target: LatLng(
-  //               newLoc.latitude!,
-  //               newLoc.longitude!,
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //       setState(() {});
-  //     },
-  //   );
-  // }
-
-  // Future setCustomMarkerIcon() async {
-  //   String imgurl = profilePicture;
-  //   // final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
-  //   // final Canvas canvas = Canvas(pictureRecorder);
-  //   // int size = 150;
-  //
-  //   bytes = (await NetworkAssetBundle(Uri.parse(imgurl))
-  //       .load(imgurl))
-  //       .buffer
-  //       .asUint8List();
-  //   print(bytes);
-  //
-  //   // final ui.Codec codec = await ui.instantiateImageCodec(bytes);
-  //   // final ui.FrameInfo imageFI = await codec.getNextFrame();
-  //   // paintImage(
-  //   //     canvas: canvas,
-  //   //     rect: Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
-  //   //     image: imageFI.image);
-  //   //
-  //   //
-  //   // final _image =
-  //   // await pictureRecorder.endRecording().toImage(size, (size * 1.1).toInt());
-  //   // final data = await _image.toByteData(format: ui.ImageByteFormat.png);
-  //   //
-  //   // //convert PNG bytes as BitmapDescriptor
-  //   // if(data?.buffer.asUint8List() != null) {
-  //   //   var result = BitmapDescriptor.fromBytes(data?.buffer.asUint8List() ?? bytes);
-  //   // }
-  //     // return BitmapDescriptor.fromBytes(data?.buffer.asUint8List() ?? bytes);
-  //
-  //   // BitmapDescriptor.fromAssetImage(
-  //   //     ImageConfiguration.empty, _displayImage?.readAsStringSync() ?? '')
-  //   //     .then(
-  //   //       (icon) {
-  //   //     sourceIcon = icon;
-  //   //   },
-  //   // );
-  // }
-
-
 
 }
 
