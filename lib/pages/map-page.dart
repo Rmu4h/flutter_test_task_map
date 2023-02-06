@@ -3,16 +3,10 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
-// import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_test_task_map/pages/profile-page.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-// import 'package:path_provider/path_provider.dart' as pathProvider;
-// import 'package:path/path.dart' as path;
-// import 'package:http/http.dart' as http;
-// import 'package:path_provider/path_provider.dart' as path_provider;
-// import 'dart:ui' as ui;
+
 import 'package:location/location.dart';
 
 import '../logic/global-variables.dart';
@@ -48,10 +42,10 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void initState() {
+    super.initState();
+
     getCurrentLocation();
     getPolyPoints();
-
-    super.initState();
   }
 
   @override
@@ -96,6 +90,7 @@ class _MapPageState extends State<MapPage> {
                       ),
                     }
                 ),
+
 
                 const Positioned(
                     top: 10,
@@ -223,6 +218,8 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
+
+  //function that adds markers to the map
   List<Marker> getMarkers()  {
     //markers to place on map
 
@@ -266,6 +263,7 @@ class _MapPageState extends State<MapPage> {
     return markers;
   }
 
+  //function that adds routes
   void getPolyPoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
@@ -285,44 +283,24 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
+  //changes the destination to a point per click
   _handleTap(tappedPoint) {
     destination = tappedPoint;
     lastTappedEl = Marker(
       markerId: MarkerId(destination.toString()),
       position: destination,
-      // draggable: true,
       icon: BitmapDescriptor.defaultMarkerWithHue(markerColor),
-      // onDragEnd: (dragEndPosition) {
-      // },
     );
 
     setState(() {
-      //remove last tapped marker
       myTappedDirectionMarker = [];
-      // print(markers);
-      // markers.remove(lastTappedEl);
-      // markers.removeLast();
-
-      // print('AFTER REMOVE ${markers}');
-
-
-      // myTappedDirectionMarker.add(
-      //     Marker(
-      //       markerId: MarkerId(destination.toString()),
-      //       position: destination,
-      //       // draggable: true,
-      //       icon: BitmapDescriptor.defaultMarkerWithHue(markerColor),
-      //       onDragEnd: (dragEndPosition) {
-      //         print(dragEndPosition);
-      //       },
-      //     )
-      // );
     });
     getPolyPoints();
     polylineCoordinates = [];
     markers = [];
   }
 
+  //gets the current location and changes the location of the camera
   void getCurrentLocation() async {
     Location location = Location();
 
@@ -359,7 +337,6 @@ class _MapPageState extends State<MapPage> {
       },
     );
   }
-
 }
 
 

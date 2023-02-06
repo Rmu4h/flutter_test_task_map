@@ -6,17 +6,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import 'global-variables.dart';
 
-class Processing {
-
-
-  // Future<void> _signIn() async {
-  //   await FirebaseAuth.instance.signOut();
-  // }
-  //
-  // Future<void> _signOut() async {
-  //   await FirebaseAuth.instance.signOut();
-  // }
-}
 
 class AuthService {
 

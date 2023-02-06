@@ -19,7 +19,7 @@ class AuthPage extends StatelessWidget {
             return const MapPage();
           }
 
-          return Login();
+          return const Login();
         },
       ),
     );
