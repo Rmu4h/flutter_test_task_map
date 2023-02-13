@@ -35,7 +35,7 @@ class _MapPageState extends State<MapPage> {
   LocationData? currentLocation;
 
   List<LatLng> polylineCoordinates = [];
-   LatLng destination = const LatLng(27.8089437, 85.3086219);
+  LatLng destination = const LatLng(27.8089437, 85.3086219);
 
   String location = "Search Location";
 
@@ -226,17 +226,17 @@ class _MapPageState extends State<MapPage> {
     setState(() {
       markers.add(
         Marker(
-            draggable: true,
-            onDragEnd: (dragEndPosition) {},
-            icon: myCustomAvatarIcon,
-            markerId:  MarkerId(showLocation.toString()),
+          draggable: true,
+          onDragEnd: (dragEndPosition) {},
+          icon: myCustomAvatarIcon,
+          markerId:  MarkerId(showLocation.toString()),
           position: showLocation ?? const LatLng(
               27.7089427, 85.3086209),
-        infoWindow: InfoWindow( //popup info
-          title: userName,
-          snippet: profileEmail,
+          infoWindow: InfoWindow( //popup info
+            title: userName,
+            snippet: profileEmail,
+          ),
         ),
-      ),
       );
 
       markers.add(Marker( //add second marker
@@ -332,11 +332,9 @@ class _MapPageState extends State<MapPage> {
             target: showLocation ?? const LatLng(
                 27.7089427, 85.3086209),
             zoom: 9.5
-            );
+        );
         setState(() {});
       },
     );
   }
 }
-
-
