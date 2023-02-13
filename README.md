@@ -1,16 +1,17 @@
-# flutter_test_task_map
+# Mobile app for android and ios 
 
-A new Flutter project.
+What was implemented:
+1. Login and logout system.
+2. Google map on the main page with the current user
+3. Ability to create a route from the user to the selected address by clicking.
+4. Drop down side menu with profile page
+5. Displaying information about the user on the profile page, you can also change the marker color
+6. Partially implemented search input, needs to be refined
 
-## Getting Started
+Technology stack:
 
-This project is a starting point for a Flutter application.
+1. DART
+2. FLUTTER
+3. Firebase
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+https://user-images.githubusercontent.com/51286978/216994062-8ec03d18-ae6a-4a57-b2ac-cb6cb0a1c30e.mp4
